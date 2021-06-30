@@ -76,18 +76,31 @@ this is a test framework and it supports
        
 * Database configuration
 * How to run tests
-    * run all test casess
-        ```
-           ./gradlew clean test
-        ```
-    * run  specific class or package
-        ``` 
-           ./gradlew clean test --Tests="location of the class or package"
-        ```
-    * run specific
-        ```
-            ./gradlew clean test -DINC_GROUPS=group name
-        ```  
+    ```
+       # specific class
+       gradle test --tests org.gradle.SomeTestClass
+       
+       # specific class and method
+       gradle test --tests org.gradle.SomeTestClass.someSpecificMethod
+       
+       # method name containing spaces
+       gradle test --tests "org.gradle.SomeTestClass.some method containing spaces"
+       
+       # all classes at specific package (recursively)
+       gradle test --tests 'all.in.specific.package*'
+       
+       # specific method at specific package (recursively)
+       gradle test --tests 'all.in.specific.package*.someSpecificMethod'
+       
+       gradle test --tests '*IntegTest'
+       
+       gradle test --tests '*IntegTest*ui*'
+       
+       gradle test --tests '*ParameterizedTest.foo*'
+       
+       # the second iteration of a parameterized test
+       gradle test --tests '*ParameterizedTest.*[2]'
+   ```
             
 * Deployment instructions
 

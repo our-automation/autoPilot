@@ -1,4 +1,4 @@
-package com.automation;
+package com.automation.api;
 
 import com.automation.api.HTTPMethod;
 import com.automation.api.RequestBuilder;

@@ -31,15 +31,16 @@ dependencies {
 //  logger log4j
             'log4j:log4j:1.2.17',
             'org.slf4j:slf4j-api:1.6.1',
-            'org.slf4j:slf4j-log4j12:1.7.28'
-//            'log4j:apache-log4j-extras:1.2.17',
-//            'uk.org.lidalia:sysout-over-slf4j:1.0.2'
+            'org.slf4j:slf4j-log4j12:1.7.28',
+//  selenium
+            'org.seleniumhq.selenium:selenium-java:3.141.59',
+            'io.github.bonigarcia:webdrivermanager:4.4.3'
+
+
     // https://mvnrepository.com/artifact/commons-io/commons-io
     implementation group: 'commons-io', name: 'commons-io', version: '2.4'
 
 }
-
-
 
 test {
 
@@ -51,18 +52,21 @@ test {
         exceptionFormat "full"
 
     }
+
     useTestNG() {
 
         useDefaultListeners = true
 
+        suites 'src/test/resources/testng.xml'
         options {
+
             suiteName('suite-name')
             testName('test-name')
-            listeners.add("com.automation.utils.listeners.TestExecutionListeners")
+
             listeners.add("com.automation.utils.listeners.RetryListener")
             listeners.add("com.automation.utils.listeners.TestExecutionListeners")
             parallel = 'methods'
-            threadCount = 1
+            threadCount = 50
         }
 
         if (System.properties['INC_GROUPS'] != null) {

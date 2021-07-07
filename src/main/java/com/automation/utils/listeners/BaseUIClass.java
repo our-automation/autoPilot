@@ -4,6 +4,7 @@ import com.automation.ui.DriverType;
 import com.automation.ui.WebDriverFactory;
 import org.openqa.selenium.WebDriver;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.testng.ITestContext;
 import org.testng.annotations.*;
 
@@ -12,34 +13,28 @@ import org.testng.annotations.*;
  * @created on 30/06/21
  */
 
+@Component
 public class BaseUIClass extends BaseClass {
 
     @Autowired
     private WebDriverFactory webDriverFactory;
-    public static final ThreadLocal<WebDriver> driver = new ThreadLocal<>();
+    private static final ThreadLocal<WebDriver> driver = new ThreadLocal<>();
+
+    public WebDriver getDriver() {
+        return driver.get();
+    }
 
     @BeforeMethod(alwaysRun = true)
     @Parameters({"browser"})
     public void uiBeforeMethod(DriverType browser) {
-        driver.set(webDriverFactory.createDriver(browser));
+//        driver.set(webDriverFactory.createDriver(browser));
+//        getDriver().get("https://uat.availfinance.in/");
 
     }
 
     @AfterMethod(alwaysRun = true)
     public void uiAfterMethod() {
-        webDriverFactory.getDriver().quit();
+//        getDriver().quit();
     }
 
-    @AfterTest(alwaysRun = true)
-    public void uiAfterTest() {
-    }
-
-    @AfterClass(alwaysRun = true)
-    public void uiAfterClass(ITestContext iTestContext) throws Exception {
-    }
-
-    @AfterSuite(alwaysRun = true)
-    public void uiAfterSuite() {
-
-    }
 }

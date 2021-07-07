@@ -1,6 +1,9 @@
 package com.automation.ui;
 
+import com.automation.utils.exceptions.UIException;
 import io.github.bonigarcia.wdm.WebDriverManager;
+//import io.selendroid.client.SelendroidDriver;
+//import io.selendroid.common.SelendroidCapabilities;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
@@ -29,8 +32,20 @@ public class DriverFactory {
         WebDriverManager.phantomjs().setup();
         return new SafariDriver();
     }
+
     public WebDriver getIEDriver() {
         WebDriverManager.iedriver().setup();
         return new InternetExplorerDriver();
     }
+//    public WebDriver getDeviceDriver() {
+//        SelendroidCapabilities capa = new SelendroidCapabilities("io.selendroid.testapp:0.17.0");
+//
+//        try {
+//            return new SelendroidDriver(capa);
+//        } catch (Exception e) {
+//            throw new UIException("failed to create driver");
+//        }
+//
+//    }
+
 }

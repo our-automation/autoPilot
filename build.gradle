@@ -34,41 +34,32 @@ dependencies {
             'org.slf4j:slf4j-log4j12:1.7.28',
 //  selenium
             'org.seleniumhq.selenium:selenium-java:3.141.59',
-            'io.github.bonigarcia:webdrivermanager:4.4.3'
+            'io.github.bonigarcia:webdrivermanager:4.4.3',
+//  appium
+            'io.appium:java-client:7.0.0'
 
-
-    // https://mvnrepository.com/artifact/commons-io/commons-io
-    implementation group: 'commons-io', name: 'commons-io', version: '2.4'
 
 }
 
 test {
 
-    testLogging.showStandardStreams = true
     systemProperties System.getProperties()
     testLogging {
         events "PASSED", "FAILED", "SKIPPED"
         showStandardStreams = true
         exceptionFormat "full"
-
     }
-
     useTestNG() {
-
         useDefaultListeners = true
-
         suites 'src/test/resources/testng.xml'
         options {
-
             suiteName('suite-name')
             testName('test-name')
-
-            listeners.add("com.automation.utils.listeners.RetryListener")
+//            listeners.add("com.automation.utils.listeners.RetryListener")
             listeners.add("com.automation.utils.listeners.TestExecutionListeners")
             parallel = 'methods'
-            threadCount = 50
+            threadCount = 1
         }
-
         if (System.properties['INC_GROUPS'] != null) {
             includeGroups(System.properties['INC_GROUPS'])
         }

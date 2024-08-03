@@ -1,12 +1,15 @@
 package com.automation.utils.config;
 
+import com.automation.utils.SystemProperties;
 import com.automation.utils.exceptions.APIException;
 import com.automation.utils.logger.ILogger;
 import org.springframework.stereotype.Component;
 
 import java.io.*;
+import java.net.URI;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
@@ -17,7 +20,7 @@ import java.util.Properties;
  */
 
 @Component
-public class ConfigManager implements ILogger {
+public class PropertiesReader implements ILogger {
     public static Properties properties = new Properties();
 
     public Integer getInt(String key) {
@@ -46,13 +49,15 @@ public class ConfigManager implements ILogger {
 
     static {
 
-        List<File> files = null;
+        List<File> files = new ArrayList<>();
         try {
-            files = Arrays.asList(new File(System.getProperty("user.dir") + "/src/main/resources/properties").listFiles());
+            URI uri = PropertiesReader.class.getResource("/properties/framework.properties").toURI();
+            files.add(new File(uri));
+            files = Arrays.asList(new File(SystemProperties.USER_DIR + "/src/main/resources/properties").listFiles());
         } catch (Exception ex) {
             log.error("directory not found \n" + ex);
         }
-        if (files!=null){
+        if (files != null) {
             for (File file : files) {
                 properties.putAll(readPropertyFile(file));
             }

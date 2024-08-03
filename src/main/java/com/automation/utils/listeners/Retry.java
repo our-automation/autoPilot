@@ -1,7 +1,6 @@
 package com.automation.utils.listeners;
 
-import com.automation.utils.config.ConfigManager;
-import com.automation.utils.extentreport.ExtentManager;
+import com.automation.utils.config.PropertiesReader;
 import com.automation.utils.logger.ILogger;
 import org.testng.IRetryAnalyzer;
 import org.testng.ITestResult;
@@ -12,12 +11,12 @@ import org.testng.ITestResult;
  */
 public class Retry implements IRetryAnalyzer {
     private int retryCount = 0;
-    private static ConfigManager configManager = new ConfigManager();
+    private static PropertiesReader propertiesReader = new PropertiesReader();
     static int maxRetryCount;
 
     static {
         try {
-            maxRetryCount = configManager.getInt("retry.test.count");
+            maxRetryCount = propertiesReader.getInt("retry.test.count");
         } catch (Exception ex) {
             maxRetryCount = 0;
         }
@@ -29,16 +28,9 @@ public class Retry implements IRetryAnalyzer {
         if (!result.isSuccess()) {
             result.getTestContext().getSkippedTests().removeResult(result.getMethod());
             if (retryCount < maxRetryCount) {
-                try {
-
-                    ExtentManager.extent.removeTest(BaseClass.parentTest.get());
-                } catch (Exception ex) {
-
-                }
                 retryCount++;
                 ILogger.log.info("Retrying " + result.getName() + " with status "
                         + getResultStatusName(result.getStatus()) + " for the " + retryCount + " time(s).");
-
                 return true;
             }
         }
@@ -62,6 +54,5 @@ public class Retry implements IRetryAnalyzer {
             default:
                 throw new ArithmeticException("status code not found " + status);
         }
-
     }
 }

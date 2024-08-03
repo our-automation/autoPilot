@@ -5,40 +5,36 @@ plugins {
 
 group 'com.com.automation'
 version '1.0-SNAPSHOT'
-sourceCompatibility = 1.8
+
 repositories {
     mavenCentral()
 }
 
 dependencies {
 
-    annotationProcessor 'org.projectlombok:lombok:1.18.10'
-    compile 'org.projectlombok:lombok:1.18.10',
+    annotationProcessor 'org.projectlombok:lombok:1.18.34'
+    implementation 'org.projectlombok:lombok:1.18.34',
             'org.skyscreamer:jsonassert:1.5.0',
             'com.fasterxml.jackson.core:jackson-databind:2.9.9.3',
             'org.springframework:spring-core:5.2.4.RELEASE',
             'org.springframework:spring-context:5.2.4.RELEASE',
             'org.springframework:spring-test:5.2.4.RELEASE',
             'org.springframework:spring-jdbc:5.2.4.RELEASE',
-
 //  testNG
-            'org.testng:testng:6.14.3',
+            'org.testng:testng:7.10.2',
 //  extent reports
             'com.aventstack:extentreports:4.1.7',// will use 5XX later
 
 //  rest assured
-            'io.rest-assured:rest-assured:4.2.1',
-
+            'io.rest-assured:rest-assured:5.5.0',
 //  logger log4j
             'log4j:log4j:1.2.17',
             'org.slf4j:slf4j-api:1.6.1',
             'org.slf4j:slf4j-log4j12:1.7.28',
 //  selenium
-            'org.seleniumhq.selenium:selenium-java:3.141.59',
-            'io.github.bonigarcia:webdrivermanager:4.4.3',
+            'org.seleniumhq.selenium:selenium-java:4.23.0',
 //  appium
-            'io.appium:java-client:7.0.0'
-
+            'io.appium:java-client:9.3.0'
 
 }
 
@@ -52,11 +48,11 @@ test {
     }
     useTestNG() {
         useDefaultListeners = true
-        suites 'src/test/resources/testng.xml'
+//        suites 'src/test/resources/testng.xml'
         options {
             suiteName('suite-name')
             testName('test-name')
-//            listeners.add("com.automation.utils.listeners.RetryListener")
+            listeners.add("com.automation.utils.listeners.BaseClass")
             listeners.add("com.automation.utils.listeners.TestExecutionListeners")
             parallel = 'methods'
             threadCount = 1

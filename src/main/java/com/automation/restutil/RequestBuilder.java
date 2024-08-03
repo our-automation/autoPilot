@@ -30,6 +30,7 @@ public class RequestBuilder {
     public RestAssuredResponse delete(String url) {
         return new RestAssuredUtil().response(requestSpecification.get(), HTTPMethod.DELETE, url);
     }
+
     public RestAssuredResponse head(String url) {
         return new RestAssuredUtil().response(requestSpecification.get(), HTTPMethod.HEAD, url);
     }

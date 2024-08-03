@@ -9,6 +9,6 @@ public class RestAssuredResponse {
     private String body;
     private Long time;
     private Integer statusCode;
-    private Map<String,Object> headers;
+    private Map<String, Object> headers;
 
 }

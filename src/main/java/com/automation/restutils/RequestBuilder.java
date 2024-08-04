@@ -1,10 +1,15 @@
-package com.automation.restutil;
+package com.automation.restutils;
 
 import io.restassured.RestAssured;
 import io.restassured.specification.RequestSpecification;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Map;
+
+/**
+ * @author Maheswara
+ * @created on 04/08/24
+ */
 
 public class RequestBuilder {
     @Autowired

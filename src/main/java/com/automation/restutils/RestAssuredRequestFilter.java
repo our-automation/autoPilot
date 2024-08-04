@@ -1,4 +1,4 @@
-package com.automation.restutil;
+package com.automation.restutils;
 
 import com.automation.utils.logger.ILogger;
 import io.restassured.filter.Filter;

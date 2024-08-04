@@ -53,7 +53,7 @@ test {
             suiteName('suite-name')
             testName('test-name')
             listeners.add("com.automation.utils.listeners.BaseClass")
-            listeners.add("com.automation.utils.listeners.TestExecutionListeners")
+//            listeners.add("com.automation.utils.listeners.TestExecutionListeners")
             parallel = 'methods'
             threadCount = 1
         }

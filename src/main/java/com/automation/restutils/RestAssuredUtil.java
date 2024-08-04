@@ -1,6 +1,5 @@
-package com.automation.restutil;
+package com.automation.restutils;
 
-import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 import io.restassured.http.Header;
@@ -8,6 +7,11 @@ import org.springframework.stereotype.Component;
 
 import java.util.Objects;
 import java.util.stream.Collectors;
+
+/**
+ * @author Maheswara
+ * @created on 04/08/24
+ */
 
 @Component
 public class RestAssuredUtil {

@@ -1,6 +1,19 @@
-java:
-  version: 11
+jdk:
+  - openjdk11
 
-build:
-  script: 
-    - ./gradlew clean build --refresh-dependencies
+before_install:
+  - echo "Using Java $JAVA_HOME"
+
+install:
+  - ./gradlew clean
+
+script:
+  - ./gradlew clean build --refresh-dependencies
+
+before_cache:
+  - echo "Build completed successfully"
+
+cache:
+  directories:
+    - $HOME/.gradle/caches/
+    - $HOME/.gradle/wrapper/

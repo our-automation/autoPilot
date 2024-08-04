@@ -1,6 +1,6 @@
 java:
-  version: 1.8
+  version: 11
 
 build:
   script: 
-    - ./gradlew build
+    - ./gradlew clean build --refresh-dependencies

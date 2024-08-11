@@ -1,8 +1,9 @@
 package com.automation.webutils;
 
 import com.automation.utils.config.PropertiesReader;
-import com.automation.utils.exceptions.UIException;
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.edge.EdgeDriver;
@@ -13,10 +14,12 @@ import org.openqa.selenium.ie.InternetExplorerDriver;
 import org.openqa.selenium.ie.InternetExplorerOptions;
 import org.openqa.selenium.safari.SafariDriver;
 import org.openqa.selenium.safari.SafariOptions;
+import org.openqa.selenium.support.ui.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.time.Duration;
+import java.util.NoSuchElementException;
 import java.util.Objects;
 
 /**
@@ -115,5 +118,35 @@ public class WebDriverManagerUtil {
             safariOptions.setBrowserVersion(version);
         }
         return new SafariDriver(safariOptions);
+    }
+
+    protected WebElement fluentWait(LocatorType locatorType, String locator) {
+        Wait<WebDriver> wait = new FluentWait<>(webDriverThreadLocal.get())
+                .withTimeout(Duration.ofSeconds(propertiesReader.getLong("fluent.wait.timeout")))
+                .pollingEvery(Duration.ofMillis(propertiesReader.getLong("fluent.wait.polling.time")))
+                .ignoring(NoSuchElementException.class);
+        return wait.until(driver -> driver.findElement(webLocator(locatorType, locator)));
+    }
+
+    private By webLocator(LocatorType locatorType, String locator) {
+        switch (locatorType) {
+            case ID:
+                return By.id(locator);
+            case NAME:
+                return By.name(locator);
+            case XPATH:
+                return By.xpath(locator);
+            case CSS:
+                return By.cssSelector(locator);
+            case CLASS:
+                return By.className(locator);
+            case LINK_TEXT:
+                return By.linkText(locator);
+            case PARTIAL_TEXT:
+                return By.partialLinkText(locator);
+            case TAG:
+                return By.tagName(locator);
+        }
+        return null;
     }
 }

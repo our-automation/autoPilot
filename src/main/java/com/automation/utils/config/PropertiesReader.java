@@ -3,6 +3,8 @@ package com.automation.utils.config;
 import com.automation.utils.SystemProperties;
 import com.automation.utils.exceptions.APIException;
 import com.automation.utils.logger.ILogger;
+import com.automation.utils.mapper.MapperUtil;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.io.*;
@@ -21,7 +23,9 @@ import java.util.Properties;
 
 @Component
 public class PropertiesReader implements ILogger {
-    public static Properties properties = new Properties();
+    @Autowired
+    MapperUtil mapperUtil;
+    private static final Properties properties = new Properties();
 
     public Integer getInt(String key) {
         return Integer.parseInt(properties.getProperty(key));
@@ -46,9 +50,23 @@ public class PropertiesReader implements ILogger {
     public String getString(String key) {
         return properties.getProperty(key);
     }
+    public <T> T getList(String key,Class<T> cls){
+        return MapperUtil.getObject(properties.getProperty(key), cls);
+    }
+    public static Properties readPropertyFile(File filePath) {
+        FileInputStream fis;
+        try {
+            fis = new FileInputStream(filePath);
+            Properties prop = new Properties();
+            prop.load(fis);
+            fis.close();
+            return prop;
+        } catch (Exception ex) {
+            throw new APIException(ex);
+        }
+    }
 
     static {
-
         List<File> files = new ArrayList<>();
         try {
             URI uri = PropertiesReader.class.getResource("/properties/framework.properties").toURI();
@@ -63,46 +81,4 @@ public class PropertiesReader implements ILogger {
             }
         }
     }
-
-    public static void doConfigure(URL configURL) {
-        InputStream istream = null;
-        URLConnection uConn;
-        try {
-            uConn = configURL.openConnection();
-            uConn.setUseCaches(false);
-            istream = uConn.getInputStream();
-            properties.load(istream);
-        } catch (Exception e) {
-            if (e instanceof InterruptedIOException || e instanceof InterruptedException) {
-                Thread.currentThread().interrupt();
-            }
-
-        } finally {
-            if (istream != null) {
-                try {
-                    istream.close();
-                } catch (InterruptedIOException ignore) {
-                    Thread.currentThread().interrupt();
-                } catch (IOException ignore) {
-                } catch (RuntimeException ignore) {
-                }
-            }
-        }
-    }
-
-
-    public static Properties readPropertyFile(File filePath) {
-
-        FileInputStream fis = null;
-        try {
-            fis = new FileInputStream(filePath);
-            Properties prop = new Properties();
-            prop.load(fis);
-            fis.close();
-            return prop;
-        } catch (Exception ex) {
-            throw new APIException(ex);
-        }
-    }
-
 }

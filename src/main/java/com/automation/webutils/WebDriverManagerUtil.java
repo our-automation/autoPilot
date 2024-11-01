@@ -1,9 +1,7 @@
 package com.automation.webutils;
 
-import com.automation.utils.config.PropertiesReader;
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
+import com.automation.utils.file.PropertiesReader;
+import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.edge.EdgeDriver;
@@ -30,8 +28,74 @@ import java.util.Objects;
 @Component
 public class WebDriverManagerUtil {
     @Autowired
-    PropertiesReader propertiesReader;
+    private PropertiesReader propertiesReader;
     private static ThreadLocal<WebDriver> webDriverThreadLocal = new ThreadLocal<>();
+
+    public void click(LocatorType locatorType, String locator) {
+        waitForElementToBeClickable(locatorType, locator);
+        fluentWait(locatorType, locator).click();
+    }
+
+    private void waitForElementToBeClickable(LocatorType locatorType, String locator) {
+        WebDriverWait webDriverWait = new WebDriverWait(getDriver(), Duration.ofSeconds(propertiesReader.getLong("fluent.wait.timeout")));
+        webDriverWait.until(ExpectedConditions.elementToBeClickable(fluentWait(locatorType, locator)));
+    }
+
+    public void sendkeysByclear(LocatorType locatorType, String locator, String text) {
+        fluentWait(locatorType, locator).clear();
+        sendkeys(locatorType, locator, text);
+    }
+
+    public void sendkeys(LocatorType locatorType, String locator, String text) {
+        fluentWait(locatorType, locator).sendKeys(text);
+    }
+
+    public Boolean isDisplayed(LocatorType locatorType, String locator) {
+        return fluentWait(locatorType, locator).isDisplayed();
+    }
+
+    public Boolean isSelected(LocatorType locatorType, String locator) {
+        return fluentWait(locatorType, locator).isSelected();
+    }
+
+    public Boolean isEnabled(LocatorType locatorType, String locator) {
+        return fluentWait(locatorType, locator).isEnabled();
+    }
+
+    public String getText(LocatorType locatorType, String locator) {
+        return fluentWait(locatorType, locator).getText();
+    }
+
+    public void isElementVisable(LocatorType locatorType, String locator, int waitTimeInSec) {
+        WebDriverWait webDriverWait = new WebDriverWait(getDriver(), Duration.ofSeconds(waitTimeInSec));
+        webDriverWait.until(ExpectedConditions.visibilityOf(fluentWait(locatorType, locator)));
+    }
+
+    public void isElementVisable(LocatorType locatorType, String locator) {
+        WebDriverWait webDriverWait = new WebDriverWait(getDriver(), Duration.ofSeconds(Integer.parseInt(propertiesReader.getString("fluent.wait.timeout"))));
+        webDriverWait.until(ExpectedConditions.visibilityOf(fluentWait(locatorType, locator)));
+    }
+
+    public void selectDropDown(LocatorType locatorType, String locator, SelectBy selectBy, String value) {
+        WebElement element = fluentWait(locatorType, locator);
+        Select select = new Select(element);
+        switch (selectBy) {
+            case INDEX:
+                select.selectByIndex(Integer.parseInt(value));
+                break;
+            case VALUE:
+                select.selectByValue(value);
+                break;
+            case VISIBLE_TEXT:
+                select.selectByVisibleText(value);
+                break;
+        }
+    }
+
+    public void javascriptExecutor(LocatorType locatorType, String locator, String scriptValue) {
+        ((JavascriptExecutor) fluentWait(locatorType, locator)).executeScript(scriptValue);
+    }
+
 
     public WebDriver getDriver() {
         return getDriver(propertiesReader.getString("browser.name"), null);
@@ -43,9 +107,14 @@ public class WebDriverManagerUtil {
 
     public WebDriver getDriver(String browser, String version) {
         if (webDriverThreadLocal.get() != null) {
-            return webDriverThreadLocal.get();
+            try {
+                webDriverThreadLocal.get().getCurrentUrl();
+                return webDriverThreadLocal.get();
+            } catch (Exception exception) {
+
+            }
         }
-        BrowserType browserType = BrowserType.valueOf(browser);
+        BrowserType browserType = BrowserType.valueOf(browser.toLowerCase());
         switch (browserType) {
             case chrome:
                 webDriverThreadLocal.set(getChromeDriver(version, null));
@@ -148,5 +217,16 @@ public class WebDriverManagerUtil {
                 return By.tagName(locator);
         }
         return null;
+    }
+
+    public void quitDriver() {
+        try {
+            if (webDriverThreadLocal.get() != null) {
+                webDriverThreadLocal.get().quit();
+                webDriverThreadLocal.remove();
+            }
+        } catch (Exception ex) {
+
+        }
     }
 }

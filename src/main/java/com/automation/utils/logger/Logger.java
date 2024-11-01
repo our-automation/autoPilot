@@ -10,9 +10,9 @@ import java.net.URL;
  */
 public class Logger {
     public static void logger() {
-        URL resource = Logger.class.getClassLoader().getResource("/properties/log4j.properties");
+        URL resource = Logger.class.getClassLoader().getResource("/log4j.properties");
         if (resource == null) {
-            resource = Logger.class.getClassLoader().getResource("properties/log4j.properties");
+            resource = Logger.class.getClassLoader().getResource("log4j.properties");
         }
 
         PropertyConfigurator.configure(resource);

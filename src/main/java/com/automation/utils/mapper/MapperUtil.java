@@ -10,6 +10,7 @@ import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.type.CollectionType;
 import com.fasterxml.jackson.databind.type.TypeFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
@@ -21,9 +22,9 @@ import java.util.Collection;
  * @author Maheswara
  * @created on 28/06/21
  */
-
+@Slf4j
 @Component
-public class MapperUtil implements ILogger {
+public class MapperUtil {
     private static ObjectMapper mapper = new ObjectMapper();
     private static ObjectMapper mapperDisableSnakeCase = new ObjectMapper();
 

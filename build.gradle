@@ -1,6 +1,9 @@
 plugins {
     id 'java'
     id 'maven-publish'
+    id 'org.springframework.boot' version '2.7.18'
+    id 'io.spring.dependency-management' version '1.1.6'
+    id 'com.github.johnrengelman.shadow' version '8.1.1'
 }
 
 group 'com.com.automation'
@@ -11,22 +14,23 @@ repositories {
 }
 
 dependencies {
-
     annotationProcessor 'org.projectlombok:lombok:1.18.34'
     implementation 'org.projectlombok:lombok:1.18.34',
-            'org.skyscreamer:jsonassert:1.5.0',
             'com.fasterxml.jackson.core:jackson-databind:2.9.9.3',
             'org.springframework:spring-core:5.3.37',
             'org.springframework:spring-context:5.3.37',
             'org.springframework:spring-test:5.3.37',
             'org.springframework:spring-jdbc:5.3.37',
+//  extentreports-cucumber7-adapter
+            'tech.grasshopper:extentreports-cucumber7-adapter:1.14.0',
+//  cucumber
+            'io.cucumber:cucumber-java:7.20.1',
+//  cucumber-spring
+            'io.cucumber:cucumber-spring:7.20.1',
+//  cucumber-testng
+            'io.cucumber:cucumber-testng:7.20.1',
 //  testNG
             'org.testng:testng:7.10.2',
-//  extent reports
-            'com.aventstack:extentreports:4.1.7',// will use 5XX later
-
-//  rest assured
-            'io.rest-assured:rest-assured:5.5.0',
 //  logger log4j
             'log4j:log4j:1.2.17',
             'org.slf4j:slf4j-api:1.6.1',
@@ -34,7 +38,15 @@ dependencies {
 //  selenium
             'org.seleniumhq.selenium:selenium-java:4.23.0',
 //  appium
-            'io.appium:java-client:9.3.0'
+            'io.appium:java-client:8.2.0',
+//  extent testng report
+            'com.aventstack:extentreports-testng-adapter:1.2.2',
+//  file utils
+            'commons-io:commons-io:2.17.0'
+    implementation('io.rest-assured:rest-assured:5.5.0') {
+        exclude group: 'org.codehaus.groovy', module: 'groovy-xml'
+        exclude group: 'org.codehaus.groovy', module: 'groovy'
+    }
 
 }
 
@@ -46,23 +58,43 @@ test {
         showStandardStreams = true
         exceptionFormat "full"
     }
-    useTestNG() {
-        useDefaultListeners = true
-//        suites 'src/test/resources/testng.xml'
-        options {
-            suiteName('suite-name')
-            testName('test-name')
-            listeners.add("com.automation.utils.listeners.BaseClass")
-//            listeners.add("com.automation.utils.listeners.TestExecutionListeners")
-            parallel = 'methods'
-            threadCount = 1
-        }
-        if (System.properties['INC_GROUPS'] != null) {
-            includeGroups(System.properties['INC_GROUPS'])
-        }
-        if (System.properties['EXC_GROUPS'] != null) {
-            excludeGroups(System.properties['EXC_GROUPS'])
-        }
+    systemProperty("RUN_WITH", "testng")
+    switch (systemProperties.get("RUN_WITH").toString().toUpperCase()) {
+        case 'TESTNG':
+            useTestNG() {
+                useDefaultListeners = true
+                options {
+                    suiteName('suite-name')
+                    testName('test-name')
+                    listeners.add("com.automation.utils.listeners.BaseTestNGListener")
+                    listeners.add("com.automation.utils.listeners.RetryListener")
+                    parallel = 'methods'
+                    threadCount = 1
+                }
+            }
+            if (System.properties['INC_GROUPS'] != null) {
+                includeGroups(System.properties['INC_GROUPS'])
+            }
+            if (System.properties['EXC_GROUPS'] != null) {
+                excludeGroups(System.properties['EXC_GROUPS'])
+            }
+            break
+//        case 'CUCUMBER':
+//            useTestNG() {
+//                options {
+//                    suiteName('suite-name')
+//                    testName('test-name')
+//                    listeners.add("com.automation.utils.listeners.BaseTestNGListener")
+////                    listeners.add("com.automation.utils.listeners.RetryListener")
+//                    parallel = 'methods'
+//                    threadCount = 1
+//                }
+//
+//            }
+//            jvmArgs(["-Ddataproviderthreadcount=1"])
+//            scanForTestClasses = false
+//            testLogging.showStandardStreams = true
+//            break
     }
 }
 publishing {
@@ -76,3 +108,6 @@ publishing {
     }
 }
 
+tasks.build {
+    dependsOn shadowJar
+}

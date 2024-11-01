@@ -1,27 +1,23 @@
 package com.automation.utils.listeners;
 
-import com.automation.utils.config.PropertiesReader;
-import com.automation.utils.logger.ILogger;
+import com.automation.SystemProperties;
+import com.automation.utils.file.PropertiesReader;
+import lombok.extern.slf4j.Slf4j;
 import org.testng.IRetryAnalyzer;
 import org.testng.ITestResult;
+
+import java.util.Objects;
 
 /**
  * @author Maheswara
  * @created on 28/06/21
  */
+@Slf4j
 public class Retry implements IRetryAnalyzer {
     private int retryCount = 0;
     private static PropertiesReader propertiesReader = new PropertiesReader();
-    static int maxRetryCount;
-
-    static {
-        try {
-            maxRetryCount = propertiesReader.getInt("retry.test.count");
-        } catch (Exception ex) {
-            maxRetryCount = 0;
-        }
-    }
-
+    static int maxRetryCount = Objects.nonNull(SystemProperties.RETRY_COUNT) ? Integer.parseInt(SystemProperties.RETRY_COUNT) :
+            propertiesReader.getInt("retry.count");
 
     public boolean retry(ITestResult result) {
 
@@ -29,7 +25,7 @@ public class Retry implements IRetryAnalyzer {
             result.getTestContext().getSkippedTests().removeResult(result.getMethod());
             if (retryCount < maxRetryCount) {
                 retryCount++;
-                ILogger.log.info("Retrying " + result.getName() + " with status "
+                log.info("Retrying " + result.getName() + " with status "
                         + getResultStatusName(result.getStatus()) + " for the " + retryCount + " time(s).");
                 return true;
             }

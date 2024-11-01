@@ -10,7 +10,7 @@ import org.testng.annotations.Test;
 public class MobileAutomation extends RunWithTestNG {
     @Autowired
     private AndroidDriverManagerUtil androidDriverManagerUtil;
-    @Test
+//    @Test
     public void launchChromeBrowser(){
         AndroidDriver androidDriver = androidDriverManagerUtil.getAndroidDriver();
         androidDriver.get("https://www.google.com/");

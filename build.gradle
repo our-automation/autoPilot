@@ -3,7 +3,7 @@ plugins {
     id 'maven-publish'
 }
 
-group 'com.com.automation'
+group 'com.automation'
 version '1.0-SNAPSHOT'
 
 repositories {
@@ -40,7 +40,6 @@ dependencies {
             'com.aventstack:extentreports-testng-adapter:1.2.2',
             'io.cucumber:cucumber-spring:7.20.1',
             'io.cucumber:cucumber-testng:7.20.1'
-
 }
 
 //test {

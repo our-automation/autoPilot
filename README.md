@@ -69,9 +69,9 @@ this is a test framework and it supports
    * Listeners
         * add below code in build.gradle
         ```
-            listeners.add("com.automation.utils.listeners.TestExecutionListeners")
-            listeners.add("com.automation.utils.listeners.RetryListener")
-            listeners.add("com.automation.utils.listeners.TestExecutionListeners")
+            listeners.add("com.autoPilot.utils.listeners.TestExecutionListeners")
+            listeners.add("com.autoPilot.utils.listeners.RetryListener")
+            listeners.add("com.autoPilot.utils.listeners.TestExecutionListeners")
         ```
        
 * Database configuration
